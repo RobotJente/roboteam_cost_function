@@ -1,5 +1,5 @@
 # used to store the field dimensions
-class Field:
+class field:
     leftx = -6
     rightx = 6
     topy = 4.5

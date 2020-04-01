@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Robot:
+class robot:
     def __init__(self, x, y, vel, circle):
         self.x = x
         self.y = y

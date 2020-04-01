@@ -1,12 +1,10 @@
-from Robot import Robot
+from robot import robot
 import numpy as np
 from matplotlib.patches import Circle
-from Field import Field
+from field import field
 
 # representation of the world.
-class World:
-    def __init__(self):
-        pass
+class world:
 
     # plot the robots at their current location
     def plot_bots(self, ax):
@@ -18,9 +16,9 @@ class World:
     def create_bots(self, n):
         robot_vector = []
         for i in range(n):
-            x = np.random.uniform(Field.leftx, Field.rightx)
-            y = np.random.uniform(Field.boty, Field.topy)
+            x = np.random.uniform(field.leftx, field.rightx)
+            y = np.random.uniform(field.boty, field.topy)
             vel = np.random.uniform(0, 10)
             circle = Circle([x, y], 0.5)
-            robot_vector.append(Robot(x, y, vel, circle))
+            robot_vector.append(robot(x, y, vel, circle))
         self.robots = robot_vector

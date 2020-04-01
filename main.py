@@ -2,22 +2,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.image import AxesImage
 
-from World import World
-from Robot import Robot
-from Field import Field
+from world import world
+from robot import robot
+from field import field
 
 # some initial setup for the plot and the world
 figure, ax = plt.subplots()
-ax.set_xlim(Field.leftx - 1, Field.rightx + 1)
-ax.set_ylim(Field.boty - 1, Field.topy + 1)
-world = World()
+ax.set_xlim(field.leftx - 1, field.rightx + 1)
+ax.set_ylim(field.boty - 1, field.topy + 1)
+world = world()
 world.create_bots(12)
 world.plot_bots(ax)
 
 # some constants for the field
 N = 100
-x = np.linspace(Field.leftx, Field.rightx, N, endpoint=False)
-y = np.linspace(Field.boty, Field.topy, N, endpoint=False)
+x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
+y = np.linspace(field.boty, field.topy, N, endpoint=False)
 
 
 # when the robots are dragged, the cost function needs to be recalculated
@@ -29,7 +29,7 @@ def redraw_cost_function():
         if type(child) is AxesImage:
             child.remove()
 
-    p = plt.imshow(z, vmin=-10, vmax=10, extent=[Field.leftx, Field.rightx, Field.topy, Field.boty])
+    p = plt.imshow(z, vmin=-10, vmax=10, extent=[field.leftx, field.rightx, field.topy, field.boty])
 
     figure.canvas.draw()
     print(len(ax.get_children()))
@@ -47,7 +47,7 @@ def cost_function(xpoint, ypoint):
 figure.canvas.mpl_connect('button_release_event', on_release)
 z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
 
-p = plt.imshow(z, vmin=-10, vmax=10, extent=[Field.leftx, Field.rightx, Field.topy, Field.boty])
+p = plt.imshow(z, vmin=-10, vmax=10, extent=[field.leftx, field.rightx, field.topy, field.boty])
 plt.colorbar(p)
 plt.show()
 
