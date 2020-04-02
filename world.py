@@ -44,6 +44,7 @@ class world:
             self.robots.append(bot)
             self.their_bots.append(bot)
 
+    # return our closest robot and the distance to the point
     def our_closest_robot_to_point(self, x, y):
         smallest = field.width
         closestbot = None
@@ -52,8 +53,10 @@ class world:
             if robot.distance(x, y) < smallest:
                 closestbot = robot
                 smallest = robot.distance(x, y)
+
         return closestbot, smallest
 
+    # return their closest robot and the distance to the point
     def their_closest_robot_to_point(self, x, y):
         smallest = field.width
         closestbot = None
@@ -61,14 +64,16 @@ class world:
             if robot.distance(x, y) < smallest:
                 closestbot = robot
                 smallest = robot.distance(x, y)
+
         return closestbot, smallest
 
+    # return closest robot and the distance to the point
     def closest_robot_to_point(self, x, y):
         smallest = field.width
         closestbot = None
-
         for robot in self.robots:
             if robot.distance(x, y) < smallest:
                 closestbot = robot
                 smallest = robot.distance(x, y)
+
         return closestbot, smallest

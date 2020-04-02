@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.image import AxesImage
+import pygmo as pg
+from pygmo.core import algorithm
 
-import robot
 from world import world
 from field import field
 
@@ -21,6 +22,7 @@ x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
 main_field = field()
 
+
 # when the robots are dragged, the cost function needs to be recalculated
 def redraw_cost_function():
     z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
@@ -31,10 +33,7 @@ def redraw_cost_function():
             child.remove()
 
     p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
-
     figure.canvas.draw()
-    print(len(ax.get_children()))
-
 
 # when the canvas is pressed and released, we redraw the cost function (since it may have been a robot drag)
 def on_release(event):
@@ -45,21 +44,26 @@ def on_release(event):
 # high score = better point
 def cost_function(xpoint, ypoint):
     score = 0
-    if main_field.in_defense_area(x = xpoint, y = ypoint):
-        score+=100
+    if main_field.in_defense_area(xpoint, ypoint):
+        score += -300
 
     bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
-    score += 100*dist
+    score += 100 * dist
 
-    shoot_succes_reward = bot.shoot_from_pos(xpoint,ypoint)
+    ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
+    score += -100 * ourdist
+
+    shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
     score += shoot_succes_reward
-    #score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+    # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
     return score
+
 
 figure.canvas.mpl_connect('button_release_event', on_release)
 z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
 
+
+algo = pg.algorithm(pg.pso(gen = 100))
 p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
 plt.colorbar(p)
 plt.show()
-

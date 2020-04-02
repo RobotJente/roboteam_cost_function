@@ -49,17 +49,19 @@ class robot:
         self.press = None
         self.circle.figure.canvas.draw()
 
+    # allow the robot circle to be disconnected from the mpl figure
     def disconnect(self):
         'disconnect all the stored connection ids'
         self.circle.figure.canvas.mpl_disconnect(self.cidpress)
         self.circle.figure.canvas.mpl_disconnect(self.cidrelease)
         self.circle.figure.canvas.mpl_disconnect(self.cidmotion)
 
-    # calculate distance between robot and point xy
+    # calculate distance between robot and point (x,y)
     def distance(self, x, y):
         length = (x - self.circle.center[0]) ** 2 + (y - self.circle.center[1]) ** 2
         return np.sqrt(length)
 
+    # define the rewards for shooting from (x,y)
     def shoot_from_pos(self, x, y):
         if self.robot_field.inside_circle(x = x,y = y,circle=self.robot_field.viable_shot_position_circle):
             print("meow")
