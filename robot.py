@@ -55,8 +55,9 @@ class robot:
         self.circle.figure.canvas.mpl_disconnect(self.cidmotion)
 
     # calculate distance between robot and point xy
-    def distance(self, xy):
-        xpoint = xy[0]
-        ypoint = xy[1]
-        length = (xpoint - self.circle.center[0]) ** 2 + (ypoint - self.circle.center[1]) ** 2
+    def distance(self, x, y):
+        length = (x - self.circle.center[0]) ** 2 + (y - self.circle.center[1]) ** 2
         return np.sqrt(length)
+
+    def shoot_from_pos(self, x, y):
+        pass

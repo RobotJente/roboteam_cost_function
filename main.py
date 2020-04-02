@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib.image import AxesImage
 
 from world import world
-from robot import robot
 from field import field
 
 # some initial setup for the plot and the world
@@ -11,7 +10,8 @@ figure, ax = plt.subplots()
 ax.set_xlim(field.leftx - 1, field.rightx + 1)
 ax.set_ylim(field.boty - 1, field.topy + 1)
 world = world()
-world.create_bots(12)
+world.create_their_bots(11)
+world.create_our_bots(11)
 world.plot_bots(ax)
 
 # some constants for the field
@@ -29,7 +29,7 @@ def redraw_cost_function():
         if type(child) is AxesImage:
             child.remove()
 
-    p = plt.imshow(z, vmin=-10, vmax=10, extent=[field.leftx, field.rightx, field.topy, field.boty])
+    p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
 
     figure.canvas.draw()
     print(len(ax.get_children()))
@@ -41,13 +41,23 @@ def on_release(event):
 
 
 # This is the cost function for the current scenario
+# high score = better point
 def cost_function(xpoint, ypoint):
-    return world.robots[0].distance([xpoint, ypoint])
+    score = 0
+    if field.in_defense_area(field, x = xpoint, y = ypoint):
+        score+=100
+
+    bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
+    score += 100*dist
+
+    shoot_succes_reward = robot.shoot_from_pos(x,y)
+    #score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+    return score
 
 figure.canvas.mpl_connect('button_release_event', on_release)
 z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
 
-p = plt.imshow(z, vmin=-10, vmax=10, extent=[field.leftx, field.rightx, field.topy, field.boty])
+p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
 plt.colorbar(p)
 plt.show()
 
