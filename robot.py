@@ -1,5 +1,5 @@
 import numpy as np
-
+from field import field
 
 class robot:
     def __init__(self, x, y, vel, circle):
@@ -8,6 +8,7 @@ class robot:
         self.vel = vel
         self.circle = circle
         self.press = None
+        self.robot_field = field()
 
     # connect to events
     def connect(self):
@@ -60,4 +61,7 @@ class robot:
         return np.sqrt(length)
 
     def shoot_from_pos(self, x, y):
-        pass
+        if self.robot_field.inside_circle(x = x,y = y,circle=self.robot_field.viable_shot_position_circle):
+            print("meow")
+            return 100
+        else: return 0

@@ -1,10 +1,12 @@
-from robot import robot
 import numpy as np
 from matplotlib.patches import Circle
 from field import field
 
 
 # representation of the world.
+from robot import robot
+
+
 class world:
 
     def __init__(self):

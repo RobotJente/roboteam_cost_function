@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.image import AxesImage
 
+import robot
 from world import world
 from field import field
 
@@ -18,7 +19,7 @@ world.plot_bots(ax)
 N = 100
 x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
-
+main_field = field()
 
 # when the robots are dragged, the cost function needs to be recalculated
 def redraw_cost_function():
@@ -44,13 +45,14 @@ def on_release(event):
 # high score = better point
 def cost_function(xpoint, ypoint):
     score = 0
-    if field.in_defense_area(field, x = xpoint, y = ypoint):
+    if main_field.in_defense_area(x = xpoint, y = ypoint):
         score+=100
 
     bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
     score += 100*dist
 
-    shoot_succes_reward = robot.shoot_from_pos(x,y)
+    shoot_succes_reward = bot.shoot_from_pos(xpoint,ypoint)
+    score += shoot_succes_reward
     #score += field.distance_to_enemy_goal(field, xpoint, ypoint)
     return score
 
