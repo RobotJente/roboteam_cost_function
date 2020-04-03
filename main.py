@@ -3,6 +3,7 @@ import numpy as np
 from matplotlib.image import AxesImage
 import pygmo as pg
 from pygmo.core import algorithm
+import math
 
 from world import world
 from field import field
@@ -56,7 +57,15 @@ def cost_function(xpoint, ypoint):
     shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
     score += shoot_succes_reward
     # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+
+    score += angle_to_goal(xpoint, ypoint) * -500
+
     return score
+
+
+def angle_to_goal(x, y):
+    angle = math.atan((field.theirgoal[1] - y) / (field.theirgoal[0] - x))
+    return abs(angle)
 
 
 figure.canvas.mpl_connect('button_release_event', on_release)
