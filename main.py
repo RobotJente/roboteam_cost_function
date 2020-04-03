@@ -1,11 +1,48 @@
+# external imports
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.image import AxesImage
 import pygmo as pg
 from pygmo.core import algorithm
 
+# user-defined imports
 from world import world
 from field import field
+
+# Problem definition class. It is in main.py because the fitness function requires data from here
+# It's purpose is to define the optimization problem for pygmo
+#################################################################################################
+class optimprob:
+    def __init__(self, name):
+        self.name = name
+        self.dim = 2
+
+    def fitness(self, x):
+        return self.cost_function(xpoint=x[0], ypoint=x[1])
+
+    def get_bounds(self):
+        return ([field.leftx, field.boty], [field.rightx, field.topy])
+
+    def get_name(self):
+        return self.name
+
+    def cost_function(self, xpoint, ypoint):
+        score = 0
+        if main_field.in_defense_area(xpoint, ypoint):
+            score += -300
+
+        bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
+        score += 100 * dist
+
+        ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
+        score += -100 * ourdist
+
+        shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
+        score += shoot_succes_reward
+        # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+        return [score]
+
+#################################################################################################
 
 # some initial setup for the plot and the world
 figure, ax = plt.subplots()
@@ -35,6 +72,16 @@ def redraw_cost_function():
     p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
     figure.canvas.draw()
 
+    algo = pg.algorithm(pg.pso(gen=1000))
+    prob = pg.problem(optimprob("name is cool"))
+    pop = pg.population(prob, 100)
+    pop = algo.evolve(pop)
+    print(pop)
+    print(pop.champion_x[0], pop.champion_x[1])
+    plt.plot(pop.champion_x[0], pop.champion_x[1], '*')
+
+
+
 # when the canvas is pressed and released, we redraw the cost function (since it may have been a robot drag)
 def on_release(event):
     redraw_cost_function()
@@ -56,14 +103,20 @@ def cost_function(xpoint, ypoint):
     shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
     score += shoot_succes_reward
     # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
-    return score
+    return -score
 
 
 figure.canvas.mpl_connect('button_release_event', on_release)
 z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
 
-
-algo = pg.algorithm(pg.pso(gen = 100))
+algo = pg.algorithm(pg.pso(gen=1000))
+prob = pg.problem(optimprob("name is cool"))
+pop = pg.population(prob, 100)
+pop = algo.evolve(pop)
+print(pop)
+print(pop.champion_x[0], pop.champion_x[1])
+plt.plot(pop.champion_x[0], pop.champion_x[1], '*')
 p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
 plt.colorbar(p)
+plt.legend()
 plt.show()

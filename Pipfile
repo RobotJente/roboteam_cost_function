@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 matplotlib = "*"
 pygmo = "*"
+cython = "*"
 
 [requires]
 python_version = "3.7"

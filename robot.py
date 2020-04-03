@@ -1,6 +1,7 @@
 import numpy as np
 from field import field
 
+
 class robot:
     def __init__(self, x, y, vel, circle):
         self.x = x
@@ -63,7 +64,7 @@ class robot:
 
     # define the rewards for shooting from (x,y)
     def shoot_from_pos(self, x, y):
-        if self.robot_field.inside_circle(x = x,y = y,circle=self.robot_field.viable_shot_position_circle):
-            print("meow")
+        if self.robot_field.inside_circle(x=x, y=y, circle=self.robot_field.viable_shot_position_circle):
             return 100
-        else: return 0
+        else:
+            return 0

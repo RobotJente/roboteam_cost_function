@@ -38,7 +38,7 @@ class world:
             x = np.random.uniform(field.leftx, field.rightx)
             y = np.random.uniform(field.boty, field.topy)
             vel = np.random.uniform(0, 10)
-            circle = Circle([x, y], 0.3, fc="aqua", alpha=0.7)
+            circle = Circle([x, y], 0.3, fc="aqua", alpha=0.7, label = 'them')
             bot = robot(x, y, vel, circle)
 
             self.robots.append(bot)
