@@ -28,6 +28,7 @@ class optimprob:
     def get_name(self):
         return self.name
 
+    # higher is worse
     def cost_function(self, xpoint, ypoint):
         score = 0
         if main_field.in_defense_area(xpoint, ypoint):
@@ -40,8 +41,8 @@ class optimprob:
         score += 100 * ourdist
 
         shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
-        score += -shoot_succes_reward*2
-        # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+        score += -shoot_succes_reward * 2
+        score += field.distance_to_enemy_goal(field, xpoint, ypoint)
         return [score]
 
 
@@ -76,13 +77,14 @@ def redraw_cost_function():
     figure.canvas.draw()
     print("Finished redrawing cost function.")
 
+
 def plot_best():
     print("Finding the best point for this cost function. Please wait...")
     a = optimprob("hi")
 
-    algo = pg.algorithm(pg.pso(gen=1000))
+    algo = pg.algorithm(pg.pso(gen=100))
     prob = pg.problem(optimprob("name is cool"))
-    pop = pg.population(prob, 100)
+    pop = pg.population(prob, 10)
     pop = algo.evolve(pop)
 
     print(pop)
@@ -95,9 +97,12 @@ def on_press(event):
     if (event.dblclick):
         print("Double click registered")
         plot_best()
+
+
 def on_release(event):
     print("Released mouse. Redrawing cost function. Please wait...")
     redraw_cost_function()
+
 
 a = optimprob("supermeow")
 figure.canvas.mpl_connect('button_press_event', on_press)
@@ -108,6 +113,4 @@ p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cm
 plt.colorbar(p)
 print("Double click to find best point for the cost function")
 print("Drag and drop robots. The cost function will redraw automatically")
-
-
 plt.show()
