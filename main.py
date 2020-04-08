@@ -57,7 +57,7 @@ world.create_our_bots(11)
 world.plot_bots(ax)
 
 # some constants for the field
-N = 10
+N = 100
 x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
 main_field = field()
@@ -74,6 +74,7 @@ def redraw_cost_function():
 
     p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
     figure.canvas.draw()
+    print("Finished redrawing cost function.")
 
 def plot_best():
     print("Finding the best point for this cost function. Please wait...")
@@ -95,7 +96,7 @@ def on_press(event):
         print("Double click registered")
         plot_best()
 def on_release(event):
-    print("Released mouse. Redrawing cost function")
+    print("Released mouse. Redrawing cost function. Please wait...")
     redraw_cost_function()
 
 a = optimprob("supermeow")
@@ -103,18 +104,10 @@ figure.canvas.mpl_connect('button_press_event', on_press)
 figure.canvas.mpl_connect('button_release_event', on_release)
 
 z = np.array([[a.cost_function(xpoint=xpoint, ypoint=ypoint)[0] for xpoint in x] for ypoint in y])
-
-algo = pg.algorithm(pg.pso(gen=1000))
-prob = pg.problem(optimprob("name is cool"))
-pop = pg.population(prob, 100)
-pop = algo.evolve(pop)
-print(pop)
-print(pop.champion_x[0], pop.champion_x[1])
-plt.plot(pop.champion_x[0], pop.champion_x[1], '*')
 p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
 plt.colorbar(p)
-plt.legend()
-
+print("Double click to find best point for the cost function")
+print("Drag and drop robots. The cost function will redraw automatically")
 
 
 plt.show()
