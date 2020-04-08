@@ -4,13 +4,15 @@ import numpy as np
 from matplotlib.image import AxesImage
 import pygmo as pg
 from pygmo.core import algorithm
+from matplotlib.widgets import Button
 
 # user-defined imports
 from world import world
 from field import field
 
+
 # Problem definition class. It is in main.py because the fitness function requires data from here
-# It's purpose is to define the optimization problem for pygmo
+# Its purpose is to define the optimization problem for pygmo
 #################################################################################################
 class optimprob:
     def __init__(self, name):
@@ -29,18 +31,19 @@ class optimprob:
     def cost_function(self, xpoint, ypoint):
         score = 0
         if main_field.in_defense_area(xpoint, ypoint):
-            score += -300
+            score += 300
 
         bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
-        score += 100 * dist
+        score += -100 * dist
 
         ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
-        score += -100 * ourdist
+        score += 100 * ourdist
 
         shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
-        score += shoot_succes_reward
+        score += -shoot_succes_reward*2
         # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
         return [score]
+
 
 #################################################################################################
 
@@ -54,7 +57,7 @@ world.create_our_bots(11)
 world.plot_bots(ax)
 
 # some constants for the field
-N = 100
+N = 10
 x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
 main_field = field()
@@ -62,7 +65,7 @@ main_field = field()
 
 # when the robots are dragged, the cost function needs to be recalculated
 def redraw_cost_function():
-    z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
+    z = np.array([[a.cost_function(xpoint, ypoint)[0] for xpoint in x] for ypoint in y])
 
     # remove the current imshow object, otherwise it stacks them on each other and your program will run slower
     for child in ax.get_children():
@@ -72,42 +75,34 @@ def redraw_cost_function():
     p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
     figure.canvas.draw()
 
+def plot_best():
+    print("Finding the best point for this cost function. Please wait...")
+    a = optimprob("hi")
+
     algo = pg.algorithm(pg.pso(gen=1000))
     prob = pg.problem(optimprob("name is cool"))
     pop = pg.population(prob, 100)
     pop = algo.evolve(pop)
+
     print(pop)
-    print(pop.champion_x[0], pop.champion_x[1])
+    print("Done plotting the best point")
     plt.plot(pop.champion_x[0], pop.champion_x[1], '*')
 
 
-
 # when the canvas is pressed and released, we redraw the cost function (since it may have been a robot drag)
+def on_press(event):
+    if (event.dblclick):
+        print("Double click registered")
+        plot_best()
 def on_release(event):
+    print("Released mouse. Redrawing cost function")
     redraw_cost_function()
 
-
-# This is the cost function for the current scenario
-# high score = better point
-def cost_function(xpoint, ypoint):
-    score = 0
-    if main_field.in_defense_area(xpoint, ypoint):
-        score += -300
-
-    bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
-    score += 100 * dist
-
-    ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
-    score += -100 * ourdist
-
-    shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
-    score += shoot_succes_reward
-    # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
-    return -score
-
-
+a = optimprob("supermeow")
+figure.canvas.mpl_connect('button_press_event', on_press)
 figure.canvas.mpl_connect('button_release_event', on_release)
-z = np.array([[cost_function(xpoint, ypoint) for xpoint in x] for ypoint in y])
+
+z = np.array([[a.cost_function(xpoint=xpoint, ypoint=ypoint)[0] for xpoint in x] for ypoint in y])
 
 algo = pg.algorithm(pg.pso(gen=1000))
 prob = pg.problem(optimprob("name is cool"))
@@ -119,4 +114,7 @@ plt.plot(pop.champion_x[0], pop.champion_x[1], '*')
 p = plt.imshow(z, extent=[field.leftx, field.rightx, field.topy, field.boty], cmap="Blues")
 plt.colorbar(p)
 plt.legend()
+
+
+
 plt.show()
