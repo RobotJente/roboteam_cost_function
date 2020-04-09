@@ -63,7 +63,7 @@ world.create_our_bots(11)
 world.plot_bots(ax)
 
 # some constants for the field
-N = 100
+N = 30
 x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
 main_field = field()
