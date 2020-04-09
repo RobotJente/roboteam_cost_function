@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib.patches import Circle
 from field import field
 import geometer as geo
-
+from ball import ball
 
 # representation of the world.
 from robot import robot
@@ -14,12 +14,15 @@ class world:
         self.robots = []
         self.our_bots = []
         self.their_bots = []
+        self.ball = ball(Circle([0, 0], 0.3, fc="orange"))
 
     # plot the robots at their current location
     def plot_bots(self, ax):
         for robot in self.robots:
             ax.add_artist(robot.circle)
             robot.connect()
+        ax.add_artist(self.ball.circle)
+        self.ball.connect()
 
     # create n bots at uniform random positions around the field
     def create_our_bots(self, n):
@@ -39,7 +42,7 @@ class world:
             x = np.random.uniform(field.leftx, field.rightx)
             y = np.random.uniform(field.boty, field.topy)
             vel = np.random.uniform(0, 10)
-            circle = Circle([x, y], 0.3, fc="aqua", alpha=0.7, label = 'them')
+            circle = Circle([x, y], 0.3, fc="aqua")
             bot = robot(x, y, vel, circle)
 
             self.robots.append(bot)
