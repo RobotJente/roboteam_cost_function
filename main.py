@@ -168,6 +168,7 @@ def on_release(event):
 
 
 
+
 figure.canvas.mpl_connect('button_press_event', on_press)
 figure.canvas.mpl_connect('button_release_event', on_release)
 

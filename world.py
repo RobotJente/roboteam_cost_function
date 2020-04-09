@@ -83,9 +83,12 @@ class world:
         return closestbot, smallest
 
     def can_reach(self, start_point, end_point):
+        if start_point == end_point:
+            return True
         for robot in self.their_bots:
             # first check if the robot intercept circle intersects with the line to the desired point (because
             # geometer cannot check intersections between segments and circles)
+            print(start_point, end_point)
             line = geo.Line(start_point, end_point)
             intersects = robot.intercept_circle.intersect(line)
             seg = geo.Segment(start_point, end_point)
