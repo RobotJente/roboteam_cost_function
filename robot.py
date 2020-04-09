@@ -1,7 +1,6 @@
 import numpy as np
 from field import field
-
-
+import geometer as geo
 class robot:
     def __init__(self, x, y, vel, circle):
         self.x = x
@@ -10,6 +9,9 @@ class robot:
         self.circle = circle
         self.press = None
         self.robot_field = field()
+        self.center = geo.Point(self.x,self.y)
+        self.intercept_radius = 0.5
+        self.intercept_circle = geo.Circle(self.center, self.intercept_radius)
 
     # connect to events
     def connect(self):
@@ -23,11 +25,11 @@ class robot:
     # if the press event was inside a circle, select that circle
     def on_press(self, event):
         if event.inaxes != self.circle.axes: return
-
         contains, attrd = self.circle.contains(event)
         if not contains: return
         x0, y0 = self.circle.center[0], self.circle.center[1]
         self.press = x0, y0, event.xdata, event.ydata
+
 
     # if the mouse is moving, and the circle is pressed, move the circle
     def on_motion(self, event):
@@ -41,6 +43,12 @@ class robot:
 
         self.circle.center[0] = (x0 + dx)
         self.circle.center[1] = (y0 + dy)
+
+        self.x = self.circle.center[0]
+        self.y = self.circle.center[1]
+        self.center = geo.Point(self.x,self.y)
+        self.intercept_radius = 0.5
+        self.intercept_circle = geo.Circle(self.center, self.intercept_radius)
 
         self.circle.figure.canvas.draw()
 

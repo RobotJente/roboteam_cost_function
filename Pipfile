@@ -9,6 +9,7 @@ verify_ssl = true
 matplotlib = "*"
 pygmo = "*"
 cython = "*"
+geometer = "*"
 
 [requires]
 python_version = "3.7"
