@@ -44,17 +44,19 @@ class robot:
         self.circle.center[0] = (x0 + dx)
         self.circle.center[1] = (y0 + dy)
 
-        self.x = self.circle.center[0]
-        self.y = self.circle.center[1]
-        self.center = geo.Point(self.x,self.y)
-        self.intercept_radius = 0.5
-        self.intercept_circle = geo.Circle(self.center, self.intercept_radius)
 
         self.circle.figure.canvas.draw()
 
     # when the circle is released, redraw the canvas
     def on_release(self, event):
         'on release we reset the press data'
+
+        self.x = self.circle.center[0]
+        self.y = self.circle.center[1]
+        self.center = geo.Point(self.x,self.y)
+        self.intercept_radius = 0.5
+        self.intercept_circle = geo.Circle(self.center, self.intercept_radius)
+
         self.press = None
         self.circle.figure.canvas.draw()
 

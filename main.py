@@ -32,22 +32,22 @@ class optimprob:
     # higher is worse
     def cost_function(self, xpoint, ypoint):
         score = 0
-        if main_field.in_defense_area(xpoint, ypoint):
-            score += 300
-        #
-        # bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
-        # score += -100 * dist
-        #
-        # ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
-        # score += 100 * ourdist
+        if main_field.in_defense_area(xpoint, ypoint) or not world.can_reach(geo.Point(xpoint, ypoint), geo.Point(field.rightx, 0)):
+            score = 300
+            return [score]
+
+        bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
+        score += -100 * dist
+
+        ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
+        score += 100 * ourdist
 
         start = geo.Point(xpoint, ypoint)
         end = geo.Point(field.rightx, 0)
-        score += -100*world.can_reach(start, end)
-        #
-        # shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
-        # score += -shoot_succes_reward * 2
-        # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+
+        shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
+        score += -shoot_succes_reward * 2
+        score += field.distance_to_enemy_goal(field, xpoint, ypoint)
         return [score]
 
 
@@ -63,7 +63,7 @@ world.create_our_bots(11)
 world.plot_bots(ax)
 
 # some constants for the field
-N = 50
+N = 100
 x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
 main_field = field()
