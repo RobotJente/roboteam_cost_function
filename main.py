@@ -9,6 +9,7 @@ from matplotlib.widgets import Button
 # user-defined imports
 from world import world
 from field import field
+import geometer as geo
 
 
 # Problem definition class. It is in main.py because the fitness function requires data from here
@@ -33,16 +34,20 @@ class optimprob:
         score = 0
         if main_field.in_defense_area(xpoint, ypoint):
             score += 300
+        #
+        # bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
+        # score += -100 * dist
+        #
+        # ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
+        # score += 100 * ourdist
 
-        bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
-        score += -100 * dist
-
-        ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
-        score += 100 * ourdist
-
-        shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
-        score += -shoot_succes_reward * 2
-        score += field.distance_to_enemy_goal(field, xpoint, ypoint)
+        start = geo.Point(xpoint, ypoint)
+        end = geo.Point(field.rightx, 0)
+        score += -100*world.can_reach(start, end)
+        #
+        # shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
+        # score += -shoot_succes_reward * 2
+        # score += field.distance_to_enemy_goal(field, xpoint, ypoint)
         return [score]
 
 
@@ -58,7 +63,7 @@ world.create_our_bots(11)
 world.plot_bots(ax)
 
 # some constants for the field
-N = 100
+N = 50
 x = np.linspace(field.leftx, field.rightx, N, endpoint=False)
 y = np.linspace(field.boty, field.topy, N, endpoint=False)
 main_field = field()
@@ -82,7 +87,7 @@ def plot_best():
     print("Finding the best point for this cost function. Please wait...")
     a = optimprob("hi")
 
-    algo = pg.algorithm(pg.pso(gen=100))
+    algo = pg.algorithm(pg.pso(gen=10))
     prob = pg.problem(optimprob("name is cool"))
     pop = pg.population(prob, 10)
     pop = algo.evolve(pop)

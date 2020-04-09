@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f37fdfdf5f5836bec986d7e6a55ea66b914ea4dce71d9fdea87c15a5e7fccc94"
+            "sha256": "9e643be0ba7ce28c2d226e77d882085b6f0f7c6abc4bdb27db3d1c993b75e02b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -68,6 +68,14 @@
             "index": "pypi",
             "version": "==0.29.16"
         },
+        "geometer": {
+            "hashes": [
+                "sha256:5574e112a3a810518f100f71eb817eaa3107f130a194dec59c3ebb81aa70922a",
+                "sha256:7281fe293bb764371298ac4e48028891eb80c1b8dbd1ac7d6676ea4c305e3990"
+            ],
+            "index": "pypi",
+            "version": "==0.2.2"
+        },
         "kiwisolver": {
             "hashes": [
                 "sha256:03662cbd3e6729f341a97dd2690b271e51a67a68322affab12a5b011344b973c",
@@ -109,6 +117,12 @@
             "index": "pypi",
             "version": "==3.2.1"
         },
+        "mpmath": {
+            "hashes": [
+                "sha256:fc17abe05fbab3382b61a123c398508183406fa132e0223874578e20946499f6"
+            ],
+            "version": "==1.1.0"
+        },
         "numpy": {
             "hashes": [
                 "sha256:1598a6de323508cfeed6b7cd6c4efb43324f4692e20d1f76e1feec7f59013448",
@@ -146,10 +160,10 @@
         },
         "pyparsing": {
             "hashes": [
-                "sha256:4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f",
-                "sha256:c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec"
+                "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1",
+                "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"
             ],
-            "version": "==2.4.6"
+            "version": "==2.4.7"
         },
         "python-dateutil": {
             "hashes": [
@@ -164,6 +178,13 @@
                 "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"
             ],
             "version": "==1.14.0"
+        },
+        "sympy": {
+            "hashes": [
+                "sha256:71a11e5686ae7ab6cb8feb5bd2651ef4482f8fd43a7c27e645a165e4353b23e1",
+                "sha256:f9b00ec76151c98470e84f1da2d7d03633180b71fb318428ddccce1c867d3eaa"
+            ],
+            "version": "==1.4"
         }
     },
     "develop": {}

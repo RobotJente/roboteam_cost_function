@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib.patches import Circle
 from field import field
+import geometer as geo
 
 
 # representation of the world.
@@ -77,3 +78,14 @@ class world:
                 smallest = robot.distance(x, y)
 
         return closestbot, smallest
+
+    def can_reach(self, start_point, end_point):
+        for robot in self.their_bots:
+            line = geo.Line(start_point, end_point)
+            intersects = robot.intercept_circle.intersect(line)
+
+            if len(intersects) > 0:
+                if not np.iscomplexobj(intersects[0].array[0]):
+                    return False
+            else: print("TRUE")
+        return True
