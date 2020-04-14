@@ -74,7 +74,10 @@ class robot:
 
     # define the rewards for shooting from (x,y)
     def shoot_from_pos(self, x, y):
+        score = 0
         if self.robot_field.inside_circle(x=x, y=y, circle=self.robot_field.viable_shot_position_circle):
-            return 100
+            score = 100
         else:
-            return 0
+            score = 0
+
+        return score

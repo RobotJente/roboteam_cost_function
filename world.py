@@ -88,7 +88,6 @@ class world:
         for robot in self.their_bots:
             # first check if the robot intercept circle intersects with the line to the desired point (because
             # geometer cannot check intersections between segments and circles)
-            print(start_point, end_point)
             line = geo.Line(start_point, end_point)
             intersects = robot.intercept_circle.intersect(line)
             seg = geo.Segment(start_point, end_point)
@@ -97,6 +96,5 @@ class world:
                 # the point is unreachable. Otherwise we're all good
                 if not np.iscomplexobj(intersects[0].array[0]):
                     if seg.contains(intersects[0]) or seg.contains(intersects[1]):
-                        print(intersects)
                         return False
         return True

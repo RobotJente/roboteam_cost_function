@@ -1,6 +1,7 @@
 # external imports
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.backend_bases import MouseButton
 from matplotlib.image import AxesImage
 import pygmo as pg
 import geometer as geo
@@ -79,16 +80,15 @@ class best_location_problem:
             return [score]
 
         bot, dist = world.their_closest_robot_to_point(xpoint, ypoint)
-        score += -100 * dist
+        # score += -100 * dist
 
         ourbot, ourdist = world.our_closest_robot_to_point(xpoint, ypoint)
-        score += 100 * ourdist
+        # score += 100 * ourdist
 
         shoot_succes_reward = bot.shoot_from_pos(xpoint, ypoint)
-        score += -shoot_succes_reward * 2
+        # score += -shoot_succes_reward * 2
         score += field.distance_to_enemy_goal(field, xpoint, ypoint)
         return [score]
-
 
 #################################################################################################
 
@@ -140,7 +140,7 @@ def find_best():
 def find_intermediate(desired_point):
     # pro = intermediate_pass_problem("intermediate_pass", desired_point)
 
-    algo = pg.algorithm(pg.pso(gen=10))
+    algo = pg.algorithm(pg.pso(gen=50))
     prob = pg.problem(intermediate_pass_problem("intermediate_pass", desired_point))
     pop = pg.population(prob, 10)
     pop = algo.evolve(pop)
@@ -162,7 +162,10 @@ def on_press(event):
 
 def on_release(event):
     for robot in world.robots:
-        if robot.press == True:
+        contains, attrd = robot.circle.contains(event)
+        print(event.button)
+
+        if contains and event.button is MouseButton.RIGHT:
             print("Released mouse. Redrawing cost function. Please wait...")
             redraw_cost_function()
 
